@@ -20,7 +20,8 @@ int main()
        out(cas,c);
        binWrite(cas,c);*/
        /**/casset *cas;
-       c=binRead(cas);
+       cas = new casset[c=count()];
+       binRead(cas);
        write(cas,c);
        yearFinder(cas,1994,c).toString();
        cout<<"---------------------------------------------------"<<endl;

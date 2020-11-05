@@ -38,19 +38,19 @@ void read(casset *cas,ifstream &file,int c)
     string a,name,yy,nn;
     for(int i=0;i<c;i++)
     {
-        au=new char[256];
-        nu=new char[256];
-        nameu=new char[256];
-        yu=new char[256];
-        file.getline(nu,256);
-        file.getline(yu,256);
+        au=new char[64];
+        nu=new char[64];
+        nameu=new char[64];
+        yu=new char[64];
+        file.getline(nu,64);
+        file.getline(yu,64);
         nn=nu;
         yy=yu;
         y=std::stoi(yy);
         n=std::stoi(nn);
-        file.getline(au,256);
+        file.getline(au,64);
         a=au;
-        file.getline(nameu,256);
+        file.getline(nameu,64);
         name=nameu;
         cas[i].setNum(n);
         cas[i].setYear(y);
@@ -95,16 +95,13 @@ void binWrite(casset *cas,int c)
         y=cas[i].getYear();
         a=cas[i].getAuthor();
         name=cas[i].getName();
-        file.write(to_string(n).c_str(),255);
-        file.write(to_string(y).c_str(),255);
-        file.write(a.c_str(),255);
-        if(i==c-1)
-            file.write(name.c_str(),256);
-        else
-            file.write(name.c_str(),255);
+        file.write(to_string(n).c_str(),64);
+        file.write(to_string(y).c_str(),64);
+        file.write(a.c_str(),64);
+        file.write(name.c_str(),64);
     }
 }
-int binRead(casset *cas)
+void binRead(casset *cas)
 {
     int n,y,c;
     char *nn,*yy,*aa,*na,*cc;
@@ -113,21 +110,23 @@ int binRead(casset *cas)
     cc=new char[3];
     file.read(cc,3);
     c=atoi(cc);
-    cas = new casset[c];
     for(int i=0;i<c;i++)
     {
-        aa=new char[255];
-        nn=new char[255];
-        na=new char[255];
-        yy=new char[255];
-        file.read(nn,255);
-        file.read(yy,255);
-        file.read(aa,255);
-        file.read(na,255);
+        aa=new char[64];
+        nn=new char[64];
+        na=new char[64];
+        yy=new char[64];
+        file.read(nn,64);
+        file.read(yy,64);
+        file.read(aa,64);
+        if(i==c-1)
+            file.read(na,63);
+        else
+            file.read(na,64);
         cas[i].setNum(atoi(nn));
         cas[i].setYear(atoi(yy));
         a=aa;
-        name=nn;
+        name=na;
         cas[i].setName(name);
         cas[i].setAuthor(a);
         delete aa;
@@ -135,6 +134,16 @@ int binRead(casset *cas)
         delete na;
         delete yy;
     }
+}
+int count()
+{
+    char *cc;
+    int c;
+    ifstream file("bin.bin",ios::binary);
+    cc=new char[3];
+    file.read(cc,3);
+    c=atoi(cc);
+    file.close();
     return c;
 }
 void numSorting(casset *cas,int c)
